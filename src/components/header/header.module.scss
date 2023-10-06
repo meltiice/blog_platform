@@ -1,0 +1,50 @@
+.header {
+   background-color: white;
+   height: 80px;
+   padding: 16px 22px 13px 22px;
+   display: flex;
+   justify-content: space-between;
+}
+
+.realworld-blog {
+   display: block;
+   padding-top: 15px;
+   font-size: 18px;
+}
+
+.rightinfo {
+   display: flex;
+   align-items: center;
+   gap: 27px;
+
+   .logout {
+      border: 1px solid black;
+      color: black;
+      width: 109px;
+      height: 53px;
+      border-radius: 5px;
+      text-align: center;
+      padding: 15px 0;
+   }
+
+   .signup {
+      border: 1px solid #52C41A;
+      color: #52C41A;
+      width: 109px;
+      height: 53px;
+      border-radius: 5px;
+      text-align: center;
+      padding: 15px 0;
+   }
+
+   .create-article {
+      height: 31px;
+      width: 113px;
+      padding: 6px 0;
+      border: 2px solid #52C41A;
+      color: #52C41A;
+      text-align: center;
+      border-radius: 5px;
+      font-size: 14px;
+   }
+}

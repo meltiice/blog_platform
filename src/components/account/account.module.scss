@@ -1,0 +1,17 @@
+.account {
+   display: flex;
+   align-items: center;
+   gap: 13px;
+   height: 46px;
+   justify-content: right;
+}
+
+.ava {
+   width: 46px;
+   height: 46px;
+   border-radius: 50%;
+}
+
+.name {
+   color: black;
+}

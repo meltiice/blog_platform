@@ -1,0 +1,29 @@
+.articles {
+   height: auto;
+   width: 100%;
+   padding: 26px 20% 0;
+   list-style: none;
+   gap: 20px;
+}
+
+.link {
+   text-decoration: none;
+   color: #1890FF;
+   &:hover {
+      color: #1890FF;
+   }
+   &:active {
+      color: #1890FF;
+   }
+}
+
+.pagination {
+   width: 280px;
+   margin: 0 auto;
+   padding-bottom: 20px;
+ }
+
+.spin {
+   width: 100%;
+   padding: 20px;
+}

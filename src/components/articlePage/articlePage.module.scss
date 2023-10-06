@@ -1,0 +1,29 @@
+.article-page {
+   margin: 26px 20% 0;
+   padding: 15px 15px 24px 15px;
+   height: auto;
+   margin-bottom: 20px;
+   width: 60%;
+   min-width: 60%;
+   background-color: white;
+   border-radius: 5px;
+   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+}
+
+.paragraf {
+   color:rgba(0, 0, 0, 0.75);
+   word-break: normal;
+}
+.spinner {
+   display: block;
+   padding: 15px;
+}
+.no-article {
+   background-color: white;
+   display: block;
+   text-align: center;
+   padding: 15px 15px 24px 15px;
+   margin: 26px 20% 0;
+   border-radius: 5px;
+   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+}

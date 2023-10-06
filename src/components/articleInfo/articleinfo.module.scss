@@ -1,0 +1,82 @@
+.article {
+   display: grid;
+   grid-template-columns: 60% 1fr;
+   grid-template-rows: 20px 20px 45px;
+   grid-template-areas: 
+    "title account"
+    "tags account"
+    "text account";
+   height: 125px;
+   width: 100%;
+   min-width: 100%;
+   gap: 7px;
+   background-color: white;
+   border-radius: 5px;
+}
+.title {
+   grid-area: title;
+   display: flex;
+   gap: 13px;
+   align-items: center;
+   height: 20px;
+   max-height: 20px;
+   .title-text {
+      font-size: 20px;
+      color: #1890FF;
+      max-height: 20px;
+      overflow: hidden;
+      text-decoration: none;
+   }
+
+   .likes-container {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      color: black;
+      img {
+         width: 15px;
+         height: 15px;
+      }
+
+      span {
+         font-size: 13px;
+      }
+   }
+}
+
+.account {
+   grid-area: account;
+   background-color: aqua;
+   margin-top: 100px;
+}
+
+
+.tags-container {
+   grid-area: tags;
+   list-style: none;
+   overflow: scroll;
+   color: black;
+   -ms-overflow-style: none;  /* IE and Edge */
+   scrollbar-width: none;
+   display: flex;
+   padding: 0;
+   gap: 5px;
+
+   &::-webkit-scrollbar {
+      display: none;
+    }
+
+   .tag {
+      font-size: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      padding: 1px 5px;
+   }
+}
+
+.text {
+   grid-area: text;
+   font-size: 12px;
+   overflow: hidden;
+   color: rgb(145, 145, 145);
+}
