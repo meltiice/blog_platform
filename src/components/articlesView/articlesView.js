@@ -14,7 +14,7 @@ const ArticlesView = (props) => {
 
    function handleClick(id) {
       console.log(`/articles/${id}`)
-      history.push(`/articles/${id}`);
+      history.push({ pathname: `/articles/${id}` });
     }
 
    const onChange = (page) => {
@@ -36,7 +36,7 @@ const ArticlesView = (props) => {
 
    const articles = articlesArray.length > 0 ? articlesArray.map((article, idx) => {
       return (
-      <li onClick={() => {history.push(`/articles/${article.slug}`)}}>
+      <li key={idx} onClick={() => handleClick(article.slug)}>
          <Article
                   title={article.title}
                   text={article.description}
@@ -66,4 +66,4 @@ const ArticlesView = (props) => {
    )
 }
 
-export default ArticlesView
+export default withRouter(ArticlesView)
