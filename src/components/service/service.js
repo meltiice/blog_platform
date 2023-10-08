@@ -36,8 +36,10 @@ export default class Service {
    }
 
    async createResourse(urlEnd, body, token) {
+      console.log('CREATE RESOURSE')
       const tok = token ? { Authorization: `Bearer ${token}` } : {};
-      const bod = body ? { body } : {}
+      const bod = body ? { body: JSON.stringify(body) } : {}
+      console.log(tok, bod)
       const result = await fetch(`${this.url}${urlEnd}`, {
          method: "POST",
          headers: {
@@ -46,7 +48,7 @@ export default class Service {
          },
          ...bod
        }).catch((res) => {
-         console.log(res)
+         console.log('FETCH ERROR ',res)
          return res;
       })
       return result;
@@ -117,8 +119,10 @@ export default class Service {
 
    loginUserIn = (data) => async (dispatch) => {
          dispatch(errorCancel())
+         console.log('data: ', data)
          const user = await this.createResourse('users/login', data)
          if (user.ok) {
+            console.log('JSON')
             const userInfo = await user.json()
             dispatch(loginUser(userInfo.user));
             console.log('local storage')
