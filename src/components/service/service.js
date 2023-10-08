@@ -121,11 +121,13 @@ export default class Service {
          if (user.ok) {
             const userInfo = await user.json()
             dispatch(loginUser(userInfo.user));
+            console.log('local storage')
             localStorage.setItem('user', JSON.stringify(userInfo.user))
             dispatch(logIn())
             localStorage.setItem('login', true)
          } else {
             const userInfo = await user.json()
+            console.log('error')
             console.log(userInfo)
             dispatch(errorMessage(userInfo.errors))
          }
