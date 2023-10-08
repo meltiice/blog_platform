@@ -48,7 +48,7 @@ export default class Service {
          },
          ...bod
        }).catch((res) => {
-         console.log('FETCH ERROR ',res)
+         console.log('FETCH ERROR ', res)
          return res;
       })
       return result;
