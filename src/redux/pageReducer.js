@@ -2,7 +2,7 @@ import { PUT_PAGE } from "./types";
 
 const initialState = 1;
 
-export const pageReducer = (state=initialState, action) => {
+const pageReducer = (state = initialState, action) => {
    switch (action.type) {
       case PUT_PAGE: {
          return action.page;
@@ -11,3 +11,5 @@ export const pageReducer = (state=initialState, action) => {
          return state;
    }
 }
+
+export default pageReducer

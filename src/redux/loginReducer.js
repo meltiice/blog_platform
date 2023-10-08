@@ -2,7 +2,7 @@ import { LOG_IN, LOG_OUT } from "./types";
 
 const initialState = localStorage.getItem('login') ? localStorage.getItem('login') : false;
 
-export const loginReducer = (state=initialState, action) => {
+const loginReducer = (state = initialState, action) => {
    switch (action.type) {
       case LOG_IN: {
          return true;
@@ -14,3 +14,5 @@ export const loginReducer = (state=initialState, action) => {
          return state;
    }
 }
+
+export default loginReducer

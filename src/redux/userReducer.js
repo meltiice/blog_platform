@@ -2,7 +2,7 @@ import { CLEAR_USER, CREATE_USER, LOGIN_USER } from './types';
 
 const initialState = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
 
-export const userReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
    switch (action.type) {
       case CREATE_USER:
          return action.data;
@@ -15,3 +15,5 @@ export const userReducer = (state = initialState, action) => {
          return state
    }
 }
+
+export default userReducer

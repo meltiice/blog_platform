@@ -1,3 +1,3 @@
-import Service from './service.js'
+import Service from './service'
 
 export default Service;

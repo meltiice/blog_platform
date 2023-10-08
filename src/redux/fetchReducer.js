@@ -2,7 +2,7 @@ import { FETCH_ARTICLES } from './types';
 
 const initialState = {}
 
-export const fetchReducer = (state = initialState, action) => {
+const fetchReducer = (state = initialState, action) => {
    switch (action.type) {
       case FETCH_ARTICLES:
          return action.data;
@@ -10,3 +10,5 @@ export const fetchReducer = (state = initialState, action) => {
          return state
    }
 }
+
+export default fetchReducer

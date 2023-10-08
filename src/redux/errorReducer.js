@@ -1,11 +1,13 @@
-import { ERROR } from "./types";
+import { ERROR, ERROR_CANCEL } from "./types";
 
-const initialState = false;
+const initialState = null;
 
-const errorReducer = (state=initialState, action) => {
+const errorReducer = (state = initialState, action) => {
    switch (action.type) {
       case ERROR:
-         return true;
+         return action.data;
+      case ERROR_CANCEL:
+         return null
       default:
          return state;
    }

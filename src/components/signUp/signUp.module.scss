@@ -34,11 +34,23 @@
       border: 1px solid #e5e5e5;
       color: #BFBFBF;
       padding: 8px 12px;
+
+      &.form-color-error:focus {
+         border: 2px solid red;
+         outline: none;
+      }
    }
 
    span {
       color: #595959;
       font-size: 14px;
+   }
+
+   .errortext {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+      margin-bottom: 15px;
    }
 }
 .divider {

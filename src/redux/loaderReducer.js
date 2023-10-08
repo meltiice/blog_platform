@@ -2,7 +2,7 @@ import { LOADER_ON, LOADER_OFF } from "./types";
 
 const initialState = true;
 
-export const loaderReducer = (state=initialState, action) => {
+const loaderReducer = (state = initialState, action) => {
    switch (action.type) {
       case LOADER_ON: {
          return true;
@@ -14,3 +14,5 @@ export const loaderReducer = (state=initialState, action) => {
          return state;
    }
 }
+
+export default loaderReducer

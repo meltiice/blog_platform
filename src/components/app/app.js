@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
-// import { Route } from 'react-router-dom/cjs/react-router-dom.min'
+import { useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import classes from './app.module.scss'
 import Service from '../service'
@@ -11,7 +10,7 @@ import ArticlePage from '../articlePage'
 import SignUp from '../signUp'
 import SignIn from '../signIn'
 import Profile from '../profile'
-import { getUser } from '../../redux/actions'
+import CreateArticle from '../createArticle'
 
 const App = () => {
    const service = new Service()
@@ -27,33 +26,19 @@ const App = () => {
       return user;
    })
 
-   /* if (Object.keys(userinfo).length === 0 && localStorage.getItem('user')) {
-      dispatch(getUser(Object(localStorage.getItem('user'))))
-   } */
-
-   const loged = useSelector((state) => {
-      const { isLogIn } = state;
-      return isLogIn;
-   })
-   /*
-   if (!loged && localStorage.getItem('login')) {
-      dispatch(getUser(Boolean(localStorage.getItem('login'))))
-   } */
-
-
    const isError = useSelector((state) => {
       const { error } = state;
       return error;
    })
 
-   const error = isError ? <ErrorIndicator /> : null;
+   const error = isError ? <ErrorIndicator error={isError}/> : null;
 
    useEffect(() => {
 
    }, [])
 
    useEffect(() => {
-      dispatch(service.articlesLoad(currentPage));
+      dispatch(service.articlesLoad(currentPage, userinfo.token));
    }, [currentPage])
 
    return <div className={classes.app}>
@@ -62,9 +47,17 @@ const App = () => {
          <Route path='/sign-up' exact component={SignUp}/>
          <Route path='/sign-in' exact component={SignIn}/>
          <Route path='/profile' exact component={Profile}/>
+         <Route path='/articles/:id/edit' exact
+                render = {({ match }) => {
+                const { id } = match.params;
+                return <CreateArticle itemId={id}/>
+               }
+                }/>
+         <Route path='/new-article' exact component={CreateArticle}/>
          <Route path='/articles/' exact component={ArticlesView}/>
          <Route path='/articles/:id' exact
                 render = {({ match }) => {
+                  console.log(match.params)
                 const { id } = match.params;
                 return <ArticlePage itemId={id}/>
                }

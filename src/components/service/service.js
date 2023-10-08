@@ -1,17 +1,14 @@
-import { fetchArticles, getUser, logIn, loginUser } from "../../redux/actions";
-import { loaderOn, loaderOff, errorMessage, getUserInfo } from "../../redux/actions";
+import { errorCancel, fetchArticles, getUser, logIn, loginUser, loaderOn, loaderOff, errorMessage, getUserInfo, sendArticle, getArticle, deleteArticleFromApi } from "../../redux/actions";
 
 export default class Service {
    url = 'https://blog.kata.academy/api/';
 
    async getResourse(urlEnd, token) {
-      const options = token ? {headers: {
-         'Authorization': `Bearer ${token}`
-      }} : null
+      const options = token ? { headers: {
+         Authorization: `Bearer ${token}`
+      } } : null
       const result = await fetch(`${this.url}${urlEnd}`, options)
-      .catch((res) => {
-         return res;
-      })
+      .catch((res) => res)
       return result;
    }
 
@@ -20,23 +17,34 @@ export default class Service {
          method: "PUT",
          headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
          },
          body: JSON.stringify(body)
-       }).catch((res) => {
-         console.log(res)
-         return res;
-      })
+       }).catch((res) => res)
       return result;
    }
 
-   async createResourse(urlEnd, body) {
+   async deleteResourse(urlEnd, token) {
+      const result = await fetch(`${this.url}${urlEnd}`, {
+         method: "DELETE",
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+         }
+       }).catch((res) => res)
+      return result;
+   }
+
+   async createResourse(urlEnd, body, token) {
+      const tok = token ? { Authorization: `Bearer ${token}` } : {};
+      const bod = body ? { body } : {}
       const result = await fetch(`${this.url}${urlEnd}`, {
          method: "POST",
          headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...tok
          },
-         body: JSON.stringify(body)
+         ...bod
        }).catch((res) => {
          console.log(res)
          return res;
@@ -44,75 +52,119 @@ export default class Service {
       return result;
    }
 
-   putUserInfo = (token, data) => {
-      return async (dispatch) => {
-         const user = await this.putResourse('user', token, data);
-         if (user){
-            const info = await user.json()
-            dispatch(getUser(info.user))
-            localStorage.setItem('user', JSON.stringify(info.user))
+   createArticle = (token, data) => async (dispatch) => {
+         dispatch(errorCancel())
+         const article = await this.createResourse('articles', data, token)
+         if (article) {
+            const info = await article.json()
+            dispatch(sendArticle(info.article));
+         } else {
+            dispatch(errorMessage(article.errors))
          }
       }
-   }
 
+   likePost = (id, token) => async () => {
+         await this.createResourse(`/articles/${id}/favorite`, null, token)
+      }
 
-   createUser = (data) => {
-      console.log('createuser',data)
-      return async (dispatch) => {
+   unlikePost = (id, token) => async () => {
+         await this.deleteResourse(`/articles/${id}/favorite`, token)
+      }
+
+   deleteArtFromApi = (slug, token) => async (dispatch) => {
+         await this.deleteResourse(`/articles/${slug}`, token)
+         dispatch(deleteArticleFromApi())
+      }
+
+   putUserInfo = (token, data) => async (dispatch) => {
+         const user = await this.putResourse('user', token, data);
+         if (user.ok) {
+            dispatch(errorCancel())
+            const info = await user.json()
+            console.log(user)
+            dispatch(getUser(info.user))
+            localStorage.setItem('user', JSON.stringify(info.user))
+         } else {
+            const info = await user.json()
+            console.log(info)
+            dispatch(errorMessage(info.errors))
+         }
+      }
+
+   putArticle = (token, data, id) => async (dispatch) => {
+         dispatch(errorCancel())
+         const article = await this.putResourse(`articles/${id}`, token, data);
+         if (article) {
+            await article.json()
+         } else {
+            dispatch(errorMessage(article.errors))
+         }
+      }
+
+   createUser = (data) => async (dispatch) => {
+         dispatch(errorCancel())
          const user = await this.createResourse('users', data)
-         console.log(user)
          if (user) {
             const userInfo = await user.json()
-            console.log(userInfo, userInfo.user)
             dispatch(getUser(userInfo.user));
             localStorage.setItem('user', JSON.stringify(userInfo.user))
-            dispatch(logIn()) //!!!!!!!!!
+            dispatch(logIn()) //! !!!!!!!!
             localStorage.setItem('login', true)
          } else {
-            console.log('user error')
+            dispatch(errorMessage(user.errors))
          }
    }
-}
-   loginUserIn = (data) => {
-      console.log('DATA',data)
-      return async (dispatch) => {
+
+   loginUserIn = (data) => async (dispatch) => {
+         dispatch(errorCancel())
          const user = await this.createResourse('users/login', data)
-         console.log('USER', user)
          if (user.ok) {
             const userInfo = await user.json()
-            console.log('ASUNC', userInfo)
             dispatch(loginUser(userInfo.user));
             localStorage.setItem('user', JSON.stringify(userInfo.user))
             dispatch(logIn())
             localStorage.setItem('login', true)
          } else {
-            console.log('user error')
+            const userInfo = await user.json()
+            console.log(userInfo)
+            dispatch(errorMessage(userInfo.errors))
          }
          }
-      }
 
-   getUserInfoThunk = (token) => {
-      return async (dispatch) => {
+   getUserInfoThunk = (token) => async (dispatch) => {
+         dispatch(errorCancel())
          const user = await this.getResourse('user', token)
          if (user.ok) {
             const userInfo = await user.json();
-            console.log(userInfo);
             dispatch(getUserInfo(userInfo.user))
+         } else {
+            dispatch(errorMessage(user.errors))
          }
       }
-   }
 
-   articlesLoad = (page) => {
-      return async (dispatch) => {
+   articlesLoad = (page, token) => async (dispatch) => {
+         dispatch(errorCancel())
          dispatch(loaderOn());
-         const articles = await this.getResourse(`articles?offset=${(page - 1)*20}`);
+         const articles = await this.getResourse(`articles?offset=${(page - 1) * 20}`, token);
          if (articles.ok) {
             const arts = await articles.json()
             dispatch(fetchArticles(arts.articles));
          } else {
-            dispatch(errorMessage())
+            dispatch(errorMessage(articles.errors))
          }
          dispatch(loaderOff());
       }
-   }
+
+   getArticle = (id, token) => async (dispatch) => {
+         dispatch(errorCancel())
+         dispatch(loaderOn());
+         const article = await this.getResourse(`articles/${id}`, token);
+         if (article.ok) {
+            const arts = await article.json()
+            dispatch(getArticle(arts.article));
+         } else {
+            dispatch(errorMessage(article.errors))
+         }
+         dispatch(loaderOff());
+      }
 }
