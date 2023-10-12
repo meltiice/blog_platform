@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom'
 import classes from './profile.module.scss'
 import Service from '../service';
-import { errorCancel } from '../../redux/actions';
 
 const Profile = () => {
    const [username, setUsername] = useState('');
@@ -14,18 +13,18 @@ const Profile = () => {
    const [emailError, setEmailError] = useState('')
    const [passwordError, setPasswordError] = useState('')
    const [avatarError, setAvatarError] = useState('')
+   const [usernameError, setUsernameError] = useState('')
    const [formValid, setFormValid] = useState(false)
    const history = useHistory();
    const dispatch = useDispatch();
    const service = new Service()
    useEffect(() => {
-      console.log(emailError, passwordError, avatarError)
-      if (emailError || passwordError || avatarError) {
+      if (emailError || passwordError || avatarError || usernameError) {
          setFormValid(false)
       } else {
          setFormValid(true)
       }
-   }, [emailError, passwordError, avatarError])
+   }, [emailError, passwordError, avatarError, usernameError])
 
    const isLoged = useSelector((state) => {
       const { isLogIn } = state;
@@ -37,21 +36,23 @@ const Profile = () => {
       return error;
    })
 
-   console.log("IS ERROR ON RERENDER: ", isError)
-
    useEffect(() => {
-      console.log("isError Changed to: ", isError)
-      // return () => {
           if (isError) {
-            console.log("there is an error")
-            // history.push('/articles')
-            console.log(isError, 'useeff')
-          } else {
-            console.log("there's no error")
+            if (!isError.start) {
+               if (isError.email) {
+                  setEmailError(`Your email ${isError.email}`);
+               }
+               if (isError.username) {
+                  setUsernameError(`Your username ${isError.username}`)
+               }
+               if (isError.password) {
+                  setPasswordError(`Your password ${isError.password}`)
+               }
+            }
+            history.push('/profile')
+          } else if (!isError) {
             history.push('/articles')
-            dispatch(errorCancel())
           }
-      // }
   }, [isError])
 
    const token = useSelector((state) => {
@@ -63,16 +64,15 @@ const Profile = () => {
       setEmail(e.target.value)
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!re.test(String(e.target.value).toLowerCase()) && e.target.value.length > 0) {
-          setEmailError('Некорректный E-mail!')
+          setEmailError('Некорректный E-mail')
       } else {
         setEmailError('')
       }
-      console.log(e.target.value);
   }
 
   const usernameHandler = (e) => {
    setUsername(e.target.value)
-   console.log(e.target.value)
+   setUsernameError('')
   }
 
   const passwordHandler = (e) => {
@@ -110,7 +110,8 @@ const Profile = () => {
                <p>Username</p>
                <input type="text" placeholder='Username' value={username}
                       onChange={(e) => usernameHandler(e)}
-                      name="username" />
+                      name="username" className={usernameError ? classes['form-color-error'] : null}/>
+                      <p className={classes.errortext}>{usernameError}</p>
             </label>
             <label className={classes.label}>
                <p>Email Address</p>

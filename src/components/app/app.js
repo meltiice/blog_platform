@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { Route } from 'react-router-dom'
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
 import classes from './app.module.scss'
 import Service from '../service'
 import Header from '../header'
@@ -31,11 +32,7 @@ const App = () => {
       return error;
    })
 
-   const error = isError ? <ErrorIndicator error={isError}/> : null;
-
-   useEffect(() => {
-
-   }, [])
+   const error = isError && !isError.start ? <ErrorIndicator/> : null;
 
    useEffect(() => {
       dispatch(service.articlesLoad(currentPage, userinfo.token));
@@ -45,19 +42,19 @@ const App = () => {
          <Route path='/' component={Header}/>
          {error}
          <Route path='/sign-up' exact component={SignUp}/>
+         <Route path='/**'> <Redirect to={'/articles'}/></Route>
          <Route path='/sign-in' exact component={SignIn}/>
          <Route path='/profile' exact component={Profile}/>
          <Route path='/articles/:id/edit' exact
                 render = {({ match }) => {
                 const { id } = match.params;
-                return <CreateArticle itemId={id}/>
+                return <CreateArticle itemId={id} username={userinfo.username}/>
                }
                 }/>
          <Route path='/new-article' exact component={CreateArticle}/>
          <Route path='/articles/' exact component={ArticlesView}/>
          <Route path='/articles/:id' exact
                 render = {({ match }) => {
-                  console.log(match.params)
                 const { id } = match.params;
                 return <ArticlePage itemId={id}/>
                }

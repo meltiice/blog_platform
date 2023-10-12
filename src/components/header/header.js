@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Account from '../account/account';
 import classes from './header.module.scss'
-import { deleteUser, logOut, errorCancel } from '../../redux/actions';
+import { deleteUser, logOut, errorStart } from '../../redux/actions';
 
 const Header = () => {
-   const dispatch = useDispatch()
+   const dispatch = useDispatch();
+   const history = useHistory()
    const islogin = useSelector((state) => {
       const { isLogIn } = state;
       return isLogIn;
@@ -15,20 +17,46 @@ const Header = () => {
       return user
    })
 
-   const handleLogOut = () => {
+   const handleLogOut = (e) => {
+      e.stopPropagation();
       localStorage.clear()
-      dispatch(errorCancel())
+      dispatch(errorStart())
       dispatch(deleteUser())
       dispatch(logOut())
+      history.push('/sign-in')
    }
 
-   const account = islogin ? <Link className={classes.litnprof} to={'/profile'}><Account username={userObj.username} pic={userObj.image ? userObj.image : ''}/></Link> : null;
-   const signin = islogin ? null : <button className={classes.signin}><span><Link className={`${classes.link} ${classes.login}`} to='/sign-in'>Sign In</Link></span></button>;
+   const goToProfile = (e) => {
+      e.stopPropagation();
+      dispatch(errorStart());
+      history.push('/profile')
+   }
+
+   const goToSignUp = (e) => {
+      e.stopPropagation();
+      dispatch(errorStart())
+      history.push('/sign-up')
+   }
+
+   const goToSignIn = (e) => {
+      e.stopPropagation();
+      dispatch(errorStart())
+      history.push('/sign-in')
+   }
+
+   const goHome = (e) => {
+      e.stopPropagation();
+      dispatch(errorStart());
+      history.push('/articles')
+   }
+
+   const account = islogin ? <Account onClick={goToProfile} username={userObj.username} pic={userObj.image ? userObj.image : ''}/> : null;
+   const signin = islogin ? null : <button className={classes.signin} onClick={goToSignIn}><span>Sign In</span></button>;
    const createArticle = islogin ? <Link to='/new-article'><button className={classes['create-article']}><span>Create Article</span></button></Link> : null
-   const inOutButton = islogin ? <button className={classes.logout} onClick={handleLogOut}><span><Link to='/sign-in'>Log Out</Link></span></button> : <button className={classes.signup}><span><Link className={classes.link} to='/sign-up'>Sign Up</Link></span></button>
+   const inOutButton = islogin ? <button className={classes.logout} onClick={handleLogOut}><span>Log Out</span></button> : <button className={classes.signup} onClick={goToSignUp}><span>Sign Up</span></button>
    return (
    <div className={classes.header}>
-      <Link className={classes.a} to={'/articles'}><p className={classes['realworld-blog']}>Realworld blog</p></Link>
+      <button className={classes['realworld-blog']} onClick={goHome}>Realworld blog</button>
       <div className={classes.rightinfo}>
       {createArticle}
       {account}

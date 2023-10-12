@@ -44,7 +44,6 @@ const ArticlesView = () => {
                   slug={article.slug}
       /></li>
       )) : null;
-   console.log(articlesArray)
    const spinner = loading ? <Spin className={classes.spin}/> : null
    const pagination = !loading && articlesArray.length > 0 ? (
          <Pagination

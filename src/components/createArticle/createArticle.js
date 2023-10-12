@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react';
-
+import PropTypes from 'prop-types'
 import { Redirect, useHistory } from 'react-router-dom';
 import classes from './createArticle.module.scss'
 import { deleteArticle, errorCancel } from '../../redux/actions';
@@ -19,7 +19,7 @@ const CreateArticle = (props) => {
    const dispatch = useDispatch();
    const service = new Service()
    const history = useHistory()
-   const { itemId } = props;
+   const { itemId, username } = props;
    useEffect(() => {
       dispatch(errorCancel())
       if (itemId) {
@@ -32,6 +32,11 @@ const CreateArticle = (props) => {
       return currentArticle;
    })
 
+   const isLoging = useSelector((state) => {
+      const { isLogIn } = state;
+      return isLogIn;
+   })
+
    useEffect(() => {
       if (article) {
          setTitle(article.title)
@@ -39,12 +44,18 @@ const CreateArticle = (props) => {
          setDescription(article.description)
          const tags = Object.fromEntries(article.tagList.map((tag, idx) => [String(idx), tag]))
          setTagsObj(tags)
-         console.log(tags, tagsObj, 'TAGS')
-
          setCount(article.tagList.length);
          setTitleError(false)
          setTextError(false)
          setDescriptionError(false)
+      }
+      if (article && article.author.username !== username && itemId && !isLoging) {
+         dispatch(deleteArticle())
+         history.push('/sign-in')
+      }
+      if (article && article.author.username !== username && itemId && isLoging) {
+         dispatch(deleteArticle())
+         history.push('/articles')
       }
    }, [article]);
 
@@ -56,10 +67,6 @@ const CreateArticle = (props) => {
       }
    }, [titleError, descriptionError, textError])
 
-   const isLoging = useSelector((state) => {
-      const { isLogIn } = state;
-      return isLogIn;
-   })
    const userInfo = useSelector((state) => {
       const { user } = state;
       return user;
@@ -92,12 +99,10 @@ const CreateArticle = (props) => {
    }
 }
 
-const handleTag = () => {
+const handleTag = (idx, value) => {
    setTagsObj((tags) => {
-      const field = String(count)
       const newObj = { ...tags }
-      newObj[field] = text;
-      console.log("NEW OBJECT: ", newObj)
+      newObj[idx] = value;
       return newObj;
    })
 }
@@ -128,10 +133,10 @@ const handleTags = () => {
       title: event.target[0].value,
       description: event.target[1].value,
       body: event.target[2].value,
-      tagList: Object.values(tagsObj)
+      tagList: Object.values(tagsObj).filter((val) => val !== '')
    }
    dispatch(service.createArticle(userInfo.token, { article: articleInfo }))
-   history.push('/articles')
+   history.push('/articles');
  }
 
  const handleSubmiteEdit = (event) => {
@@ -140,11 +145,10 @@ const handleTags = () => {
       title: event.target[0].value,
       description: event.target[1].value,
       body: event.target[2].value,
-      tagList: Object.values(tagsObj)
+      tagList: Object.values(tagsObj).filter((val) => val !== '')
    }
    dispatch(service.putArticle(userInfo.token, { article: articleInfo }, itemId));
-   dispatch(deleteArticle())
-   history.push('/articles')
+   history.push('/articles');
  }
 
  const func = itemId ? handleSubmiteEdit : handleSubmit;
@@ -181,10 +185,10 @@ const handleTags = () => {
             <label className={classes.label}>
                <p>Tags</p>
                <ul className={classes.tagslist}>
-                  {Object.values(tagsObj).map((tag, idx) => <li key={idx}>
-                     <input placeholder='Tag' type='text' value={tag}
-                            onChange={(e) => handleTag(idx, e.target.value)}/>
-                     <button type='button' onClick={() => { deleteTag(idx) }}>
+                  {Object.entries(tagsObj).map((tag) => <li key={tag[0]}>
+                     <input placeholder='Tag' type='text' value={tag[1]}
+                            onChange={(e) => handleTag(tag[0], e.target.value)}/>
+                     <button type='button' onClick={() => { deleteTag(tag[0]) }}>
                         Delete
                      </button>
                   </li>)}
@@ -200,6 +204,15 @@ const handleTags = () => {
    return <React.Fragment>
       {component}
    </React.Fragment>
+}
+
+CreateArticle.defaultProps = {
+   username: ''
+}
+
+CreateArticle.propTypes = {
+   username: PropTypes.string,
+   itemId: PropTypes.string
 }
 
 export default CreateArticle

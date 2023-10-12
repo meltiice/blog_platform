@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react';
-
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { Link, Redirect } from 'react-router-dom';
 import classes from './signIn.module.scss'
 import Service from '../service';
@@ -12,6 +12,7 @@ const SignIn = () => {
    const [passwordError, setPasswordError] = useState('Пароль не может быть пустым!')
    const [formValid, setFormValid] = useState(false)
    const dispatch = useDispatch();
+   const history = useHistory();
    const service = new Service()
    useEffect(() => {
       if (emailError || passwordError) {
@@ -26,8 +27,22 @@ const SignIn = () => {
       return isLogIn;
    })
 
-   const colorClass = formValid ? 'form-color-basic' : 'form-color-error';
-   console.log(colorClass, formValid)
+   const isError = useSelector((state) => {
+      const { error } = state;
+      return error;
+   })
+
+   useEffect(() => {
+          if (isError) {
+            if (!isError.start) {
+               if (isError['email or password']) {
+                  setEmailError(`Your email or password ${isError['email or password']}`);
+               }
+            }
+            history.push('/sign-in')
+          }
+  }, [isError])
+
    const emailHandler = (e) => {
       setEmail(e.target.value)
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -39,7 +54,6 @@ const SignIn = () => {
       } else {
         setEmailError('')
       }
-      console.log(e.target.value);
   }
 
   const passwordHandler = (e) => {
@@ -49,20 +63,16 @@ const SignIn = () => {
           } else {
         setPasswordError('')
       }
-      console.log(e.target.value);
   }
 
   const handleSubmit = (event) => {
    event.preventDefault();
-   console.log(event.target)
    const user = {
       email: event.target[0].value,
       password: event.target[1].value
    }
-   console.log('handleSubmit', user)
    dispatch(service.loginUserIn({ user }))
  }
-  console.log("email:", email);
   const component = isLoging ? <Redirect to={'/articles'}/> : (
       <div className={classes['sign-in']}>
          <h2 className={classes.heading}>Sign In</h2>

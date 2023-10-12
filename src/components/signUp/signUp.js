@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom'
 import classes from './signUp.module.scss'
@@ -18,9 +18,9 @@ const SignUp = () => {
    const [checkboxError, setCheckboxError] = useState('Примите пользовательское соглашение')
    const [formValid, setFormValid] = useState(false)
    const dispatch = useDispatch();
+   const history = useHistory();
    const service = new Service()
    useEffect(() => {
-      console.log(emailError, passwordError, passwordCheckError, checkboxError, usernameError)
       if (emailError || passwordError || passwordCheckError || checkboxError || usernameError) {
          setFormValid(false)
       } else {
@@ -33,6 +33,25 @@ const SignUp = () => {
       return isLogIn;
    })
 
+   const isError = useSelector((state) => {
+      const { error } = state;
+      return error;
+   })
+
+   useEffect(() => {
+          if (isError) {
+            if (isError.email) {
+               setEmailError(`Your email ${isError.email}`);
+            }
+            if (isError.username) {
+               setUsernameError(`Your username ${isError.username}`)
+            }
+            history.push('/sign-up')
+          } else if (!isError) {
+            history.push('/articles')
+          }
+  }, [isError])
+
    const emailHandler = (e) => {
       setEmail(e.target.value)
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -44,7 +63,6 @@ const SignUp = () => {
       } else {
         setEmailError('')
       }
-      console.log(e.target.value);
   }
 
   const usernameHandler = (e) => {
@@ -54,7 +72,6 @@ const SignUp = () => {
    } else {
       setUsernameError('')
    }
-   console.log(e.target.value)
   }
 
   const passwordHandler = (e) => {
@@ -67,7 +84,6 @@ const SignUp = () => {
       } else {
         setPasswordError('')
       }
-      console.log(e.target.value);
   }
 
   const passwordHandlerCheck = (e) => {
@@ -77,29 +93,24 @@ const SignUp = () => {
       } else {
          setPasswordCheckError('')
       }
-      console.log('check', e.target.value, password)
   }
 
-  const checkboxHandler = (e) => {
+  const checkboxHandler = () => {
    setCheckbox((checkboxi) => !checkboxi)
    if (checkbox) {
       setCheckboxError('Примите пользовательское соглашение')
    } else {
       setCheckboxError('')
    }
-
-   console.log(e.target.value)
   }
 
   const handleSubmit = (event) => {
    event.preventDefault();
-   console.log(event.target)
    const user = {
       username: event.target[0].value,
       email: event.target[1].value,
       password: event.target[2].value
    }
-   console.log('handleSubmit', user)
    dispatch(service.createUser({ user }))
  }
    const formCreateAccount = isLoged ? <Redirect to='/articles'/> : (

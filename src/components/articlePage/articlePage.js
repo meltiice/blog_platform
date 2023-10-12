@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { Spin } from 'antd';
 import Markdown from 'react-markdown';
@@ -25,7 +26,6 @@ const ArticlePage = (props) => {
     if (articlesArray.length > 0) {
       articlesArray.forEach((el) => {
          if (el.slug === itemId) {
-            console.log(true)
             article = { ...el }
          }
       });
@@ -53,6 +53,10 @@ const ArticlePage = (props) => {
       {content}
    </React.Fragment>
    )
+}
+
+ArticlePage.protoTypes = {
+   itemId: PropTypes.string
 }
 
 export default ArticlePage

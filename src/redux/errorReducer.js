@@ -1,4 +1,4 @@
-import { ERROR, ERROR_CANCEL } from "./types";
+import { ERROR, ERROR_CANCEL, ERROR_START } from "./types";
 
 const initialState = null;
 
@@ -8,6 +8,8 @@ const errorReducer = (state = initialState, action) => {
          return action.data;
       case ERROR_CANCEL:
          return null
+      case ERROR_START:
+         return { start: true }
       default:
          return state;
    }

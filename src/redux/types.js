@@ -6,6 +6,7 @@ export const LOADER_OFF = 'LOADER_OFF';
 export const PUT_PAGE = 'PUT_PAGE';
 
 export const ERROR = 'ERROR';
+export const ERROR_START = 'ERROR_START'
 export const ERROR_CANCEL = 'ERROR_CANCEL'
 
 export const LOG_IN = 'LOG_IN'
