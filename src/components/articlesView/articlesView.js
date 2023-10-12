@@ -18,7 +18,9 @@ const ArticlesView = () => {
     }
 
    const onChange = (page) => {
+      localStorage.setItem('page', String(page))
       dispatch(putPage(page));
+      window.location.reload();
    };
 
    const userinfo = useSelector((state) => {

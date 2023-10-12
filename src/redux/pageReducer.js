@@ -1,6 +1,6 @@
 import { PUT_PAGE } from "./types";
 
-const initialState = 1;
+const initialState = localStorage.getItem('page') ? localStorage.getItem('page') : 1;
 
 const pageReducer = (state = initialState, action) => {
    switch (action.type) {
