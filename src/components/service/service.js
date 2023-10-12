@@ -1,4 +1,4 @@
-import { errorCancel, fetchArticles, getUser, logIn, loginUser, loaderOn, loaderOff, errorMessage, sendArticle, getArticle, errorStart, deleteArticle } from "../../redux/actions";
+import { errorCancel, fetchArticles, getUser, logIn, loginUser, loaderOn, loaderOff, errorMessage, sendArticle, getArticle, errorStart, deleteArticle, errorFetch, clearArticles } from "../../redux/actions";
 
 export default class Service {
    url = 'https://blog.kata.academy/api/';
@@ -140,7 +140,8 @@ export default class Service {
             dispatch(fetchArticles(arts.articles));
          } else {
             const res = await articles.json()
-            dispatch(errorMessage(res.errors))
+            dispatch(errorFetch(res.errors))
+            dispatch(clearArticles())
          }
          dispatch(loaderOff());
       }

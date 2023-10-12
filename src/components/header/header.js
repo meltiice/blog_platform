@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Account from '../account/account';
 import classes from './header.module.scss'
-import { deleteUser, logOut, errorStart } from '../../redux/actions';
+import { deleteUser, logOut, errorStart, clearArticles } from '../../redux/actions';
 
 const Header = () => {
    const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const Header = () => {
       e.stopPropagation();
       localStorage.clear()
       dispatch(errorStart())
+      dispatch(clearArticles())
       dispatch(deleteUser())
       dispatch(logOut())
       history.push('/sign-in')
@@ -34,12 +35,14 @@ const Header = () => {
 
    const goToSignUp = (e) => {
       e.stopPropagation();
+      dispatch(clearArticles())
       dispatch(errorStart())
       history.push('/sign-up')
    }
 
    const goToSignIn = (e) => {
       e.stopPropagation();
+      dispatch(clearArticles())
       dispatch(errorStart())
       history.push('/sign-in')
    }

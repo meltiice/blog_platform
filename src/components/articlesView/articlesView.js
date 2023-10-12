@@ -1,7 +1,8 @@
 import { useHistory, withRouter } from 'react-router-dom'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Spin, Pagination } from "antd";
+import Service from '../service';
 import classes from './articlesView.module.scss'
 import Article from "../article/article"
 import { putPage } from '../../redux/actions';
@@ -10,6 +11,7 @@ const ArticlesView = () => {
    let currentPage = 1;
    const dispatch = useDispatch();
    const history = useHistory();
+   const service = new Service()
 
    function handleClick(id) {
       history.push({ pathname: `/articles/${id}` });
@@ -19,10 +21,20 @@ const ArticlesView = () => {
       dispatch(putPage(page));
    };
 
+   const userinfo = useSelector((state) => {
+      const { user } = state;
+      return user;
+   })
+
    currentPage = useSelector((state) => {
       const { page } = state;
       return page;
    })
+
+   useEffect(() => {
+      dispatch(service.articlesLoad(currentPage, userinfo.token));
+   }, [currentPage])
+
    const articlesArray = useSelector((state) => {
       const { articles } = state;
       return articles;

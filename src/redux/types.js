@@ -1,4 +1,5 @@
 export const FETCH_ARTICLES = 'FETCH_ARTICLES';
+export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
 
 export const LOADER_ON = 'LOADER_ON';
 export const LOADER_OFF = 'LOADER_OFF';
@@ -8,6 +9,7 @@ export const PUT_PAGE = 'PUT_PAGE';
 export const ERROR = 'ERROR';
 export const ERROR_START = 'ERROR_START'
 export const ERROR_CANCEL = 'ERROR_CANCEL'
+export const ERROR_FETCH = 'ERROR_FETCH'
 
 export const LOG_IN = 'LOG_IN'
 export const LOG_OUT = 'LOG_OUT'

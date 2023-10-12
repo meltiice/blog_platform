@@ -32,7 +32,7 @@ const App = () => {
       return error;
    })
 
-   const error = isError && !isError.start ? <ErrorIndicator/> : null;
+   const error = isError && isError.fetchError && !isError.start ? <ErrorIndicator error={isError}/> : null;
 
    useEffect(() => {
       dispatch(service.articlesLoad(currentPage, userinfo.token));
