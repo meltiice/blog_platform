@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { Route } from 'react-router-dom'
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
+import { Switch } from 'react-router-dom/cjs/react-router-dom.min'
 import classes from './app.module.scss'
 import Service from '../service'
 import Header from '../header'
@@ -12,6 +12,7 @@ import SignUp from '../signUp'
 import SignIn from '../signIn'
 import Profile from '../profile'
 import CreateArticle from '../createArticle'
+import NotFound from '../notFound/notFound'
 
 const App = () => {
    const service = new Service()
@@ -38,20 +39,22 @@ const App = () => {
       dispatch(service.articlesLoad(currentPage, userinfo.token));
    }, [currentPage])
 
+   /* <Route path='/**'> <Redirect to={'/articles'}/></Route> */
+
    return <div className={classes.app}>
-         <Route path='/' component={Header}/>
+      <Route path='/' component={Header}/>
+      <Switch>
          {error}
-         <Route path='/sign-up' exact component={SignUp}/>
-         <Route path='/**'> <Redirect to={'/articles'}/></Route>
-         <Route path='/sign-in' exact component={SignIn}/>
-         <Route path='/profile' exact component={Profile}/>
-         <Route path='/articles/:id/edit' exact
+         <Route path='/sign-up' component={SignUp}/>
+         <Route path='/sign-in' component={SignIn}/>
+         <Route path='/profile' component={Profile}/>
+         <Route path='/articles/:id/edit'
                 render = {({ match }) => {
                 const { id } = match.params;
                 return <CreateArticle itemId={id} username={userinfo.username}/>
                }
                 }/>
-         <Route path='/new-article' exact component={CreateArticle}/>
+         <Route path='/new-article' component={CreateArticle}/>
          <Route path='/articles/' exact component={ArticlesView}/>
          <Route path='/articles/:id' exact
                 render = {({ match }) => {
@@ -59,6 +62,8 @@ const App = () => {
                 return <ArticlePage itemId={id}/>
                }
                 }/>
+         <Route path="*" component={NotFound} />
+         </Switch>
    </div>
 }
 

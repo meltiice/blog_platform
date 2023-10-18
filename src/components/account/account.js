@@ -24,6 +24,10 @@ const Account = (props) => {
       const tkn = Object.keys(user).length > 0 ? user.token : '';
       return tkn;
    })
+   const isLoading = useSelector((state) => {
+      const { loader } = state;
+      return loader;
+   })
    const handlerDelete = () => {
       setDeleteFlag(true)
    }
@@ -40,7 +44,7 @@ const Account = (props) => {
    const modal = deleteFlag ? <div className={classes.modal}><div className={classes.cont}>
          <p>Do you sure you what to delete this article?</p>
          <div className={classes.container}>
-         <button className={classes.yes} onClick={deleteButtonPush}>Yes</button>
+         <button className={classes.yes} onClick={deleteButtonPush} disabled={isLoading}>Yes</button>
          <button onClick={cancelButton}>No</button>
          </div>
       </div></div> : null;
@@ -62,14 +66,14 @@ const Account = (props) => {
 Account.defaultProps = {
    username: '',
    pic: '',
-   login: false,
+   login: '',
    slug: '',
    onClick: () => {}
  };
 Account.propTypes = {
    username: PropTypes.string,
    pic: PropTypes.string,
-   login: PropTypes.bool,
+   login: PropTypes.string,
    slug: PropTypes.string,
    onClick: PropTypes.func
  };

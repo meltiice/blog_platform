@@ -37,6 +37,10 @@ const CreateArticle = (props) => {
       return isLogIn;
    })
 
+   const isLoading = useSelector((state) => {
+      const { loader } = state;
+      return loader;
+   })
    useEffect(() => {
       if (article) {
          setTitle(article.title)
@@ -127,7 +131,7 @@ const handleTags = () => {
    })
 }
 
-  const handleSubmit = (event) => {
+const handleSubmit = (event) => {
    event.preventDefault();
    const articleInfo = {
       title: event.target[0].value,
@@ -196,7 +200,7 @@ const handleTags = () => {
                </ul>
 
             </label>
-            <button disabled={!formValid} type='submit' className={classes.button}>Send</button>
+            <button disabled={!formValid || isLoading} type='submit' className={classes.button}>Send</button>
          </form>
       </div>
    )

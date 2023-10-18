@@ -77,6 +77,7 @@ export default class Service {
       }
 
    putUserInfo = (token, data) => async (dispatch) => {
+         dispatch(loaderOn())
          const user = await this.putResourse('user', token, data);
          if (user.ok) {
             dispatch(errorStart())
@@ -88,10 +89,12 @@ export default class Service {
             const info = await user.json()
             dispatch(errorMessage(info.errors))
          }
+         dispatch(loaderOff())
       }
 
    putArticle = (token, data, id) => async (dispatch) => {
          dispatch(errorCancel())
+         dispatch(loaderOn())
          const article = await this.putResourse(`articles/${id}`, token, data);
          if (article) {
             await article.json()
@@ -99,10 +102,12 @@ export default class Service {
          } else {
             dispatch(errorMessage(article.errors))
          }
+         dispatch(loaderOff())
       }
 
    createUser = (data) => async (dispatch) => {
          dispatch(errorStart())
+         dispatch(loaderOn())
          const user = await this.createResourse('users', data)
          if (user.ok) {
             const userInfo = await user.json()
@@ -114,9 +119,11 @@ export default class Service {
             const res = await user.json()
             dispatch(errorMessage(res.errors))
          }
+         dispatch(loaderOff())
    }
 
    loginUserIn = (data) => async (dispatch) => {
+         dispatch(loaderOn())
          const user = await this.createResourse('users/login', data)
          if (user.ok) {
             const userInfo = await user.json()
@@ -129,7 +136,8 @@ export default class Service {
             const userInfo = await user.json()
             dispatch(errorMessage(userInfo.errors))
          }
-         }
+         dispatch(loaderOff())
+      }
 
    articlesLoad = (page, token) => async (dispatch) => {
       dispatch(errorCancel())
@@ -139,9 +147,14 @@ export default class Service {
             const arts = await articles.json()
             dispatch(fetchArticles(arts.articles));
          } else {
-            const res = await articles.json()
-            dispatch(errorFetch(res.errors))
-            dispatch(clearArticles())
+            console.log(articles)
+            try {
+               const res = await articles.json()
+               dispatch(errorFetch(res.errors))
+               dispatch(clearArticles())
+            } catch (err) {
+               console.log('catch')
+            }
          }
          dispatch(loaderOff());
       }

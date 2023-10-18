@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { Spin } from 'antd';
 import Markdown from 'react-markdown';
 import classes from './articlePage.module.scss'
 import ArticleInfo from '../articleInfo'
+import NotFound from '../notFound/notFound';
 
 const ArticlePage = (props) => {
    const { itemId } = props;
@@ -41,10 +41,7 @@ const ArticlePage = (props) => {
                               login={login}
                               slug={article.slug}
                               />
-                              <Markdown className={classes.paragraf}>{article.body}</Markdown></div> : <div className={classes['no-article']}>
-                                 <p>No such an Article</p>
-                                 <p><Link to={`/articles/`}>Go back</Link></p>
-                              </div>
+                              <Markdown className={classes.paragraf}>{article.body}</Markdown></div> : <NotFound />
    content = loading ? null : content;
    const spinner = loading ? <Spin className={classes.spinner}/> : null;
    return (

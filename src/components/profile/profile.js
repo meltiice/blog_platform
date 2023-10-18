@@ -36,6 +36,11 @@ const Profile = () => {
       return error;
    })
 
+   const isLoading = useSelector((state) => {
+      const { loader } = state;
+      return loader
+   })
+
    useEffect(() => {
           if (isError) {
             if (!isError.start) {
@@ -101,7 +106,7 @@ const Profile = () => {
    const im = event.target[3].value ? { image: event.target[3].value } : null
    const user = { ...us, ...em, ...pas, ...im }
    dispatch(service.putUserInfo(token, { user }))
- }
+}
    const formCreateAccount = !isLoged ? <Redirect to='/articles'/> : (
       <div className={classes.profile}>
          <h2 className={classes.heading}>Edit Profile</h2>
@@ -134,7 +139,7 @@ const Profile = () => {
                       name='avatar' className={avatarError ? classes['form-color-error'] : null}/>
                       <p className={classes.errortext}>{avatarError}</p>
             </label>
-            <button disabled={!formValid} type='submit' className={classes.button}>Save</button>
+            <button disabled={!formValid || isLoading} type='submit' className={classes.button}>Save</button>
          </form>
       </div>
    )

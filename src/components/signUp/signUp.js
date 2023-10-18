@@ -38,6 +38,10 @@ const SignUp = () => {
       return error;
    })
 
+   const isLoading = useSelector((state) => {
+      const { loader } = state;
+      return loader;
+   })
    useEffect(() => {
           if (isError) {
             if (isError.email) {
@@ -47,8 +51,6 @@ const SignUp = () => {
                setUsernameError(`Your username ${isError.username}`)
             }
             history.push('/sign-up')
-          } else if (!isError) {
-            history.push('/articles')
           }
   }, [isError])
 
@@ -157,12 +159,11 @@ const SignUp = () => {
                       className={checkboxError ? classes['form-color-error'] : null}/>
                <span className={classes.agreement}>I agree to the processing of my personal information</span>
             </label>
-            <button disabled={!formValid} type='submit' className={classes.button}>Create</button>
+            <button disabled={!formValid || isLoading} type='submit' className={classes.button}>Create</button>
             <p className={classes.already}>Already have an account? <Link to={'/sign-in'} className={classes.a}>Sign in</Link></p>
          </form>
       </div>
    )
-
    return (
       <React.Fragment>
          {formCreateAccount}

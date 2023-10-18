@@ -1,4 +1,4 @@
-import { FETCH_ARTICLES, LOADER_OFF, LOADER_ON, PUT_PAGE, DELETE_ARTICLE, ERROR, ERROR_CANCEL, LOG_IN, CREATE_USER, GET_USER_INFO, LOGIN_USER, LOG_OUT, CLEAR_USER, CREATE_ARTICLE, GET_ARTICLE, DELETE_ARTICLE_STATE, ERROR_START, CLEAR_ARTICLES, ERROR_FETCH } from "./types";
+import { FETCH_ARTICLES, LOADER_OFF, LOADER_ON, PUT_PAGE, DELETE_ARTICLE, ERROR, ERROR_CANCEL, LOG_IN, CREATE_USER, GET_USER_INFO, LOGIN_USER, LOG_OUT, CLEAR_USER, CREATE_ARTICLE, GET_ARTICLE, DELETE_ARTICLE_STATE, ERROR_START, CLEAR_ARTICLES, ERROR_FETCH, LIKE } from "./types";
 
 export function fetchArticles(data) {
    return {
@@ -32,6 +32,14 @@ export function sendArticle(data) {
       data
    }
 }
+
+export function setLike(data) {
+   return {
+      type: LIKE,
+      data
+   }
+}
+
 export function getUser(data) {
    return {
       type: CREATE_USER,

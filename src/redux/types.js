@@ -1,5 +1,6 @@
 export const FETCH_ARTICLES = 'FETCH_ARTICLES';
 export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
+export const LIKE = 'LIKE';
 
 export const LOADER_ON = 'LOADER_ON';
 export const LOADER_OFF = 'LOADER_OFF';

@@ -22,6 +22,7 @@
       "no-useless-escape": "off",
       "import/prefer-default-export": "off",
       "object-curly-newline": "off",
+      "no-case-declarations": "off",
       "max-len": ["error", { "code": 500 }],
       "class-methods-use-this": "off",
       "quotes": "off",

@@ -32,6 +32,10 @@ const SignIn = () => {
       return error;
    })
 
+   const isLoading = useSelector((state) => {
+      const { loader } = state;
+      return loader;
+   })
    useEffect(() => {
           if (isError) {
             if (!isError.start) {
@@ -95,7 +99,7 @@ const SignIn = () => {
                       />
                <p className={classes.errortext}>{passwordError}</p>
             </label>
-            <button disabled={!formValid} type='submit' className={classes.button}>Login</button>
+            <button disabled={!formValid || isLoading} type='submit' className={classes.button}>Login</button>
             <p className={classes.already}>Do not have an account? <Link to={'/sign-up'} className={classes.a}>Sign up</Link></p>
          </form>
       </div>
